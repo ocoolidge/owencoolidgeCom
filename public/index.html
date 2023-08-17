@@ -1,80 +1,94 @@
 <!DOCTYPE HTML>
-<style>
-    p{
-      font-family: arial;
-      width: 400px;
-      margin-left: calc(50% - 200px);
-      margin-top: 200px;
-    }.wrapper{
-      width:  100%;
-      text-align: center;
-    }.wrapper img{
-      width: 200px; 
-      position: absolute;
-    }.wrapper video{
-      width: 480px;
-      height: 270px;
-      margin-top: 140px;
-    }.wrapper2{
-      margin-left: 40px;
-      margin-top: -8%;
-      margin-bottom: 40px;
-    }.wrapper2 img{
-      margin-right: 140px;
-      margin-bottom: 170px;
-      height: 400px;
-    }.wrapper2 video{
-      height: 300px;
-      margin-right: 40px;
-      margin-top: 240px;
-      margin-bottom: 170px;
-    }.spacer{
-      height:  400px;
-    }.spacer2{
-      height: 200px;
-    }
-  </style>
-<html lang="sv">
-<head>
-  <style type = "stylesheet">
-    
-  </style>
-  <title>Owen Coolidge</title>
-</head>
-<body style = "margin: 0px">
-  
-  
+    <head>
+        <title>Owen Coolidge</title>
+        <html lang = "en">
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <style>
+            body{
+                margin: 0;
+                height: 100vh;
+            }button{
+                opacity: 0;
+                z-index: 20;
+                position: absolute;
+                width: 50%;
+                height: 100vh;
+                padding: 0px;
+                border: 0px;
+                margin: 0px;
+            }#right{
+                margin-left: 50%;
+            }#show1{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                top: 19.1vh;
+                height: 61.8vh;
+                width: 61.8%;
+                left: 19.1%;
+            }.slideFrame > *{
+                width: auto;
+                max-width: 100%;
+                max-height: 61.8vh;
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <button id = "left"></button>
+        <button id = "right"></button>
+        <div id = 'show1' class = 'slideShow'></div>
+    </body>
+    <script>
 
-<div class = "wrapper">
-    <!-- <p>
-      &nbsp&nbsp&nbsp&nbsp&nbspContact ocoolidge@gmail.com for inquiries
-    </p> -->
-    <video autoplay muted loop>
-      <source src="fabricBuilding.mp4" type="video/mp4">
-      <source src="fabricBuilding.ogg" type="video/ogg">
-      Your browser does not support the video tag.
-    </video>
-</div>
+        let slides = new Array()
+        let srcs = [
+            //"content/fabricBuilding.mp4",
+            //"content/loop1.mp4",
+            "content/just_cloth_chimney.jpg",
+            //"content/building_8_night_really.jpg",
+            "content/chest_V2_render_white.jpg",
+            "content/owen1.jpg"
+        ]
 
-<!-- <div class = "spacer"></div>
+        for(let src of srcs){
+            let frame = document.createElement('div')
+            let fileType = src.slice(src.lastIndexOf('.') + 1, src.length)
+            if(fileType == 'jpg'){
+                let slide = document.createElement('img')
+                slide.src = src
+                frame.appendChild(slide)
+            }else if(fileType = 'mp4'){
+                let slide = document.createElement('video')
+                let videoSource = document.createElement('source')
+                slide.autoplay = true; slide.muted = true; slide.loop = true
+                videoSource.type = "video/mp4"
+                videoSource.src = src
+                slide.appendChild(videoSource)
+                slide.load()
+                frame.appendChild(slide)
+            }
+            frame.className = "slideFrame"
+            slides.push(frame)
+        }
 
-<div class = "wrapper2">
+        let nextSlide = Math.floor(Math.random() * slides.length)
+        document.getElementById('show1').appendChild(slides[nextSlide].cloneNode(true))
+        document.addEventListener("click", slide)
+        function slide(event) {
+            let lastSlide = nextSlide
+            if(event.clientX > innerWidth/2)
+                nextSlide = (lastSlide < slides.length-1)? nextSlide+1: 0
+            else
+                nextSlide = (lastSlide > 0)? nextSlide-1: slides.length-1
+            slides[nextSlide].tagName == 'video'? slides[nextSlide].load():
+            document.getElementById('show1').removeChild(show1.lastChild)
+            document.getElementById('show1').appendChild(slides[nextSlide].cloneNode(true))
+            console.log("slide: " + nextSlide)
+        }
 
-  <img id = "image1" src = "just_cloth_chimney.jpg">
-  <img id = "image2" src = "building_8_night_really.jpg">
-  <img id = "image3" src = "chest_V2_render_white.jpg">
-  <img id = "image4" src = "owen1.jpg">
-  
-  <br>
-
-  <video id = "video2" autoplay muted loop>
-      <source id = "mosh" src="loop1.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-
-</div>
-<div class = "spacer2"></div> -->
-
-
-</body>
+    </script>
+    <script src = "script.js"></script>
 </html>
