@@ -11,6 +11,7 @@
             }button{
                 width: 100%;
                 height: 80.9vh;
+                z-index: 25;
                 opacity: 0;
                 z-index: 10;
                 /* position: absolute; */
@@ -23,66 +24,39 @@
                 z-index: 20;
                 text-align: center;
             }a{
-            
-            }p{
-                display: none;
-                justify-content: center;
-            }#captions{
                 position: fixed;
-                margin-top: 70vh;
+                display: none;
+                width: 100%;
+                text-align: center;
+                top: 80.9vh;
+            }p{
+                margin-left: 19.1%;
+                top: 80.9vh;
                 width: 61.8%;
-                justify-content: center;
             }#show1{
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                position: fixed;
-                margin-top: 19.1vh;
+                position: relative;
+                top: 19.1vh;
                 height: 61.8vh;
                 width: 61.8%;
-                margin-left: 19.1%;
+                left: 19.1%;
             }.slideFrame > *{
                 width: auto;
                 max-width: 100%;
                 max-height: 61.8vh;
                 margin: 0 auto;
-            }#downloadPDF{
-                position: fixed;
-                display: none;
-                width: 100%;
-                text-align: center;
-                top: 83vh;
-            }#artLink{
-                
-                text-decoration: none;
-                color: black;
-                font-size: 18px;
-            }#artLink:hover {
-                color:blue;
-            }#artLinkWrapper{
-                margin-top: 10px;
-                margin-left: 10px;
-                z-index: 30;
-                width:fit-content;
-                height: fit-content;
-                display: block;
-                position: absolute;
             }
         </style>
     </head>
     <body>
-        <div id = 'artLinkWrapper'>
-            <a id = 'artLink' href = './art'><u>Individual Projects</u></a>
-        </div>
         <button></button>
-        <div id = 'show1' class = 'slideShow'>
-            <div id = 'captions'>
-                <p id = 'totemCaption'>"Totem" Barbican Center, London. 2019 (Production Assistant)</a>
-                <p id = 'nPolytopeCaption'>"N-Polytope: Behaviors in Light and Sound After Iannis Xenakis─MAC Version" Musée d'art contemporain de Montréal. 2017 (Production Assistant)
-                <p id = 'sommeCaption'>"Mycocene" Oboro, Montréal. 2019 (Collaborator)</a>
-            </div>
-        </div>
+        <div id = 'show1' class = 'slideShow'></div>
         <a id = 'downloadPDF' href = './CVResume.pdf' download = 'CVResume.pdf'>View/Download CVResume</a>
+        <!-- <p id = 'totemCaption'>"Totem" Barbican Center, London. 2019 (Production Assistant)</a>
+        <p id = 'nPolytopeCaption'>"N-Polytope: Behaviors in Light and Sound After Iannis Xenakis─MAC Version" Musée d'art contemporain de Montréal. 2017 (Production Assistant)
+        <p id = 'sommeCaption'>"Mycocene" Oboro, Montréal. 2019 (Collab)</a> -->
     </body>
     <script>
         let slides = new Array()
@@ -99,10 +73,9 @@
         ]
 
         let captions = [
-            '"Totem", Chris Salter, Sofian Audry, Takashi Ikegami, Alexandre Saunier and Thomas Spieris. Photograph: Tristan Fewings/Getty Images for Barbican Centre. 2019',
-            '"Mycocene", somme, INTERNATIONAL DIGITAL ART FESTIVAL(QC - CA) & Elektra Montreàl, Oboro. 2019. http://www.oboro.net/en/residency/mycocene/ ',
-            '"N-Polytope: Behaviors in Light and Sound After Iannis Xenakis─MAC Version", Chris Salter, Musée d’art contemporain de Montréal, Photo from Guy L’Heureux. 2017',
-            ""         
+            '"Totem" Barbican Center, London. 2019 (Production Assistant)',
+            '"Mycocene" Oboro, Montréal. 2019 (Collab) http://www.oboro.net/en/residency/mycocene/ ',
+            '"N-Polytope: Behaviors in Light and Sound After Iannis Xenakis─MAC Version" Musée d\'art contemporain de Montréal. 2017 (Production Assistant)',
         ]
 
         for(let src of srcs){
@@ -133,10 +106,8 @@
             slides.push(frame)
         }
 
-        //let nextSlide = Math.floor(Math.random() * slides.length)
-        let nextSlide = 0
+        let nextSlide = Math.floor(Math.random() * slides.length)
         document.getElementById('show1').appendChild(slides[nextSlide].cloneNode(true))
-        console.log("slide: " + nextSlide)
         document.addEventListener("click", slide)
         function slide(event) {
             let lastSlide = nextSlide
@@ -148,27 +119,17 @@
                 nextSlide = (lastSlide > 0)? nextSlide-1: slides.length-1
             slides[nextSlide].tagName == 'video'? slides[nextSlide].load():null
             if(nextSlide == slides.length-1){
+                console.log(screen)
                 screen.style.height = '80.9vh'
                 downlA.style.display = 'block'
-                document.getElementById('totemCaption').style.display = 'none'
-                document.getElementById('nPolytopeCaption').style.display = 'none'
-                document.getElementById('sommeCaption').style.display = 'none'
             }else{
+                console.log(screen)
                 screen.style.height = '100vh'
                 downlA.style.display = 'none'
-                if(nextSlide == 0){
-                    document.getElementById('totemCaption').style.display = 'inline'
-                    document.getElementById('nPolytopeCaption').style.display = 'none'
-                    document.getElementById('sommeCaption').style.display = 'none'
-                }if(nextSlide == 1){
-                    document.getElementById('totemCaption').style.display = 'none'
-                    document.getElementById('nPolytopeCaption').style.display = 'none'
-                    document.getElementById('sommeCaption').style.display = 'inline'
-                }if(nextSlide == 2){
-                    document.getElementById('totemCaption').style.display = 'none'
-                    document.getElementById('nPolytopeCaption').style.display = 'inline'
-                    document.getElementById('sommeCaption').style.display = 'none'
-                }
+                let caption = document.createElement('p')
+                let tNode = document.createTextNode(captions[nextSlide])
+                caption.appendChild(tNode)
+                document.getElementById('show1').appendChild(caption)
             }
             document.getElementById('show1').removeChild(show1.lastChild)
             document.getElementById('show1').appendChild(slides[nextSlide].cloneNode(true))
