@@ -3,119 +3,207 @@
         <title>Owen Coolidge</title>
         <link rel="stylesheet" href="styles.css" type="text/css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script type="text/javascript" src="script.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-            <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-74090942-1"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-74090942-1');
-        </script>
     </head>
 
     <body>
         <div class="menuColumn">
+            <h1 id = 'header'>Owen Coolidge</h1>
             <ul class="columnContent" id = "workContent">
-                <li><b>Individual</b></li>
-                <li>&nbsp&nbsp&nbsp<a href="work/stonks" id = "stonksT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Stonks</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="work/bike" id = "bikeT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Electric Pit Bike</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="work/mosh" id = "moshT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Mosh</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="work/photography" id = "photographyT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Photography</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="work/renders" id = "rendersT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Renders</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="work/heat_paint" id = "heatPaintT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Heat Paint</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="work/news_simulation" id = "news_simulationT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">News Simulation</a></li>
-                <!-- <li>&nbsp&nbsp&nbsp<a href="work/type" id = "typeT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Typography</a></li> -->
-                <li>&nbsp&nbsp&nbsp<a href="work/loon" id = "loonT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Loon</a></li>
+                <h3><b>Individual</b></h3>
+                <li id = "stonksT">Stonks</li>
+                <li id = "bikeT">Electric Pit Bike</li>
+                <li id = "moshT">Mosh</li>
+                <li id = "photographyT">Photography</li>
+                <li id = "rendersT">Renders</li>
+                <li id = "heatPaintT">Heat Paint</li>
+                <li id = "loonT">Loon</li>
                 
-                <li><b>Collaboration</b></li>
-                <li>&nbsp&nbsp&nbsp<a href="work/mood_map" id = "mood_mapT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Mood Map</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="work/sense_net" id = "sensenetT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">SenseNet</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="https://mycocene.net" target="_blank" id = "mycoceneT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Mycocene</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="https://somme-collective.net/" target="_blank" id = "multipexerT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Multipexer</a></li>
+                <h3><b>Collaboration</b></h3>
+                <li id = "moodMapT">Mood Map</li>
+                <li id = "sensenetT">SenseNet</li>
+                <li id = "mycoceneT"><a href="https://mycocene.net" target="_blank">Mycocene</a></li>
+                <li id = "multipexerT"><a href="https://somme-collective.net/" target="_blank">Multipexer</a></li>
 
-                <li><b>Websites</b></li>
-                <li>&nbsp&nbsp&nbsp<a href="https://milescoolidge.net" target = "_blank" id = "milescoolidgeT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">milescoolidge.net</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="https://amyrussell.net" target = "_blank" id = "amyrussellT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">amyrussell.net</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="https://edwardcoolidge.com" target = "_blank" id = "edwardcoolidgeT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">edwardcoolidge.com</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="https://electricpitbike.com/macro" target = "_blank" id = "electricpitbikeT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">electricpitbike.com</a></li>
+                <h3><b>Websites</b></h3>
+                <li id = "milescoolidgeT"><a href="https://milescoolidge.net" target = "_blank">milescoolidge.net</a></li>
+                <li id = "amyrussellT"><a href="https://amyrussell.net" target = "_blank">amyrussell.net</a></li>
+                <li id = "edwardcoolidgeT"><a href="https://edwardcoolidge.com" target = "_blank">edwardcoolidge.com</a></li>
+                <li id = "electricpitbikeT"><a href="https://electricpitbike.com/macro" target = "_blank">electricpitbike.com</a></li>
 
-
-                <li><b>Contracts</b></li>
-                <li>&nbsp&nbsp&nbsp<a href="https://artsandculture.google.com/asset/installation-photo-from-the-barbican-s-ai-more-than-human-exhibition-featuring-chris-salter-s-totem-artwork-barbican-centre/swGsZz6MxnWErA?hl=en" target = "_blank" id = "totemT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Totem</a></li>
-                <li>&nbsp&nbsp&nbsp<a href="http://cinemaexpo67.ca/expo-salter/" target = "_blank" id = "npolytopeT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">N-polytope</a></li>
-
-                <!-- <li><a href="work/webgl" id = "webglT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">WebGL Experiments</a></li> -->
-                <!-- <li>&nbsp&nbsp&nbsp<a href="work/synth" id = "synthT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Synthesizer</a></li> -->
-                <!-- <li><a href="work/desert" id = "desertT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Desert</a></li> -->
-                <!-- <li><a href="work/new_patterns" id = "newPatternsT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">New Patterns</a></li> -->
-                <!-- <li><a href="work/webgl" id = "webglT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">WebGl Experiments</a></li> -->
-                <!-- <li>&nbsp&nbsp&nbsp<a href="work/morning" id = "morningT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Morning</a></li> -->
-                <!-- <li><a href="work/underwater" id = "underwaterT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Underwater</a></li> -->
-                <!-- <li><a href="work/kaden" id = "kazsdT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Kaden</a></li> -->
-                <!-- <li><a href="work/stud" id = "studT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">ST&Uuml;D</a></li> -->
-                <!-- <li><a href="work/animated_cube" id = "animated_cubeT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Animated Cube</a></li> -->
-                <!-- <li><a href="work/subwoofer" id = "subwooferT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Subwoofer</a></li> -->
-                <!-- <li><a href="work/rooftop_furniture" id = "furnitureT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Rooftop Furniture</a></li> -->
-                <!-- <li><a href="work/cube" id = "cubeT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Cube</a></li> -->
-                <!-- <li><a href="work/glithc" id = "glithcT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Glithc</a></li> -->
-                <!-- <li><a href="work/canoe" id = "canoeT" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)">Canoe</a></li> -->
+                <h3><b>Contracts</b></h3>
+                <li id = "totemT" ><a href="https://artsandculture.google.com/asset/installation-photo-from-the-barbican-s-ai-more-than-human-exhibition-featuring-chris-salter-s-totem-artwork-barbican-centre/swGsZz6MxnWErA?hl=en" target = "_blank">Totem</a></li>
+                <li id = "npolytopeT"><a href="http://cinemaexpo67.ca/expo-salter/" target = "_blank">N-polytope</a></li>
                 <br>
             </ul>
         </div>
 
-        <div class="content">
-
-            <div class="landingImageMiddle">
-                <a href="work/stonks">
-                <img id = "stonksI" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)" src='source/stonks/stonks.jpg'></a>
-            </div>
-
-            <div class="landingImageBike">
-                <a href="work/bike">
-                <img width = '85%' id = "bikeI" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)" src='source/bike/bike1.jpg'></a>
-            </div>
-
-            <div class="landingImageHalf">
-                <a href="work/mosh">
-                <video id = "moshI" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)" playsinline autoplay muted loop>
-                    <source src="source/mosh/loop2.mp4" type="video/mp4">
-                    <source src="source/mosh/loop2.mp4" type="video/ogg">
-                </video>
-            </div>
-
-            <div class="landingImageBike">
-                <a href="work/photography">
-                <img width = '85%' id = "photographyI" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)" src='source/photography/abandon2_forWeb.jpg'></a>
-            </div>
-
-            <div class="sensenetLanding">
-                <a href="work/sense_net">
-                <img id = "sensenetI" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)" src='source/sense_net/landing_circles.jpg'></a>
-            </div>
-            
-            <div class="landingImage">
-                <a href="work/renders">
-                <img id = "rendersI" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)" src='source/renders/building1.jpg'></a>
-            </div>
-
-            <div class="landingImageWide">
-                <a href="work/heat_paint">
-                <img id = "heatPaintI" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)" src='source/heat_paint/heatPaint2.jpg'></a>
-            </div>
-            
-            <div class = "landingImage3">
-                <a href="work/mood_map">
-                <img id = "mood_mapI" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)" src='source/mood_map/mood_map1.jpg'></a>
-            </div>
-
-            <div class = "landingImage2">
-                <a href="https://mycocene.net" target="_blank">
-                <img id = "mycoceneI" onmouseover="textOnHover(this.id)" onmouseout="textOffHover(this.id)" src='source/mycocene/mycocene3.jpg'></a>
-            </div>
-
+        <div class="content" id = 'landing'>
+            <img id = "stonksI" src='source/stonks/stonks.jpg'/>
+            <img id = "bikeI" src='source/bike/bike1.jpg'/>
+            <video id = "moshI" playsinline autoplay muted loop><source src="source/mosh/loop2.mp4" type="video/mp4"></video>
+            <img id = "photographyI" src='source/photography/abandon2_forWeb.jpg'>
+            <img id = "sensenetI" src='source/sense_net/landing_circles.jpg'>
+            <img id = "rendersI" src='source/renders/building1.jpg'>
+            <img id = "heatPaintI" src='source/heat_paint/heatPaint2.jpg'>
+            <img id = "moodMapI" src='source/mood_map/mood_map1.jpg'>
+            <img id = "mycoceneI" src='source/mycocene/mycocene3.jpg'>
         </div>
 
+        <div class = 'subContent' id = 'stonks'>
+            <div class="workImages">
+                <iframe src="https://player.vimeo.com/video/861777305?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" title="stonks_recording"></iframe>
+                <img src='./source/stonks/stonks.jpg' >
+            </div>
+        </div>
+
+        <div class = 'subContent' id = 'bike'>
+            <div class="workImages">
+                <img src='./source/bike/bike1.jpg'/>
+                <img src='./source/bike/bike2.jpg'/>
+                <img src='./source/bike/bike3.jpg'/>
+                <img src='./source/bike/bike4.jpg'/>
+            </div>
+        </div>
+
+        <div class = 'subContent' id = 'mosh'>
+            <div class = "workImagesLarge">
+
+                <video playsinline autoplay muted loop>
+                  <source src="./source/mosh/stripMallMosh.mp4" type="video/mp4">
+                  <source src="./source/mosh/stripMallMosh.mp4" type="video/ogg">
+                </video>
+        
+              </div>
+        
+              <div class = "workImagesFull">
+                <video playsinline autoplay muted loop>
+                  <source src="./source/mosh/stripMallMosh.mp4" type="video/mp4">
+                  <source src="./source/mosh/stripMallMosh.mp4" type="video/ogg">
+                </video>
+              </div>
+        
+              <div class = "workImagesLarge">
+        
+                <video playsinline autoplay muted loop>
+                  <source src="./source/mosh/loop4.mp4" type="video/mp4">
+                </video>
+        
+              </div>
+        
+              <div class = "workImagesLarge">
+        
+                <video playsinline autoplay muted loop>
+                  <source src="./source/mosh/loop1.mp4" type="video/mp4">
+                </video>
+        
+                <video playsinline autoplay muted loop>
+                  <source src="./source/mosh/loop3.mp4" type="video/mp4">
+                </video>
+        
+              </div>
+        </div>
+
+        <div class = 'subContent' id = 'photography'>
+            <div class = "workImagesFull">
+                <img src = "./source/photography/owen1.jpg">
+            </div>
+        
+            <div class = "workImagesLarge">
+                <img src = "./source/photography/abandon2_forWeb.jpg">
+                <img src = "./source/photography/abandon1_forWeb.jpg">
+                <img src = "./source/photography/glass.jpg">
+                <img src = "./source/photography/owen1.jpg">
+            </div>
+        
+            <div class = "workImagesFull">
+                <img src = "./source/photography/abandon1_forWeb.jpg">
+                <img src = "./source/photography/abandon7_forWeb.jpg">
+                
+            </div>
+        
+              <div class = "workImagesLarge">
+                <img src = "./source/photography/abandon5_forWeb.jpg">
+                <!--<img src = "./source/entropy/green.jpg">-->
+                <!--<img src = "./source/entropy/abandon3_forWeb.jpg">
+                <img src = "./source/entropy/abandon4_forWeb.jpg">-->
+                <!--<img src = "./source/entropy/abandon6_forWeb.jpg">-->
+                </div>
+        
+            </div>
+        </div>
+
+        <div class = 'subContent' id = 'renders'>
+            <div class="workImagesSmall">
+                <br>
+                <img src='./source/renders/building1.jpg'/>
+                <img src='./source/renders/building2.jpg'/>
+                <img src='./source/renders/building3.png'/>
+                <!--<img src='./source/renders/franks4.jpg'/>-->
+                <!--<img src='./source/renders/franks5.jpg'/>-->
+                <!--<img src='./source/renders/chest.jpg'/>-->
+                <img src='./source/renders/chest.jpg'/>
+                <img src='./source/renders/chest1.jpg'/>
+                <img src='./source/renders/chest2.jpg'/>
+                <img src='./source/renders/chest3.jpg'/>
+                <img src='./source/renders/chest4.jpg'/>
+                <img src='./source/renders/chest5.jpg'/>
+                <img src='./source/renders/chest6.jpg'/>
+                <!--<img src='./source/renders/chest11.jpg'/>-->
+                <img src='./source/renders/franks1.jpg'/>
+                <img src='./source/renders/franks2.jpg'/>
+                <img src='./source/renders/franks3.jpg'/>
+                <img src='./source/renders/franks4.jpg'/>
+                <img src='./source/renders/franks5.jpg'/>
+      
+                <img src='./source/renders/chest7.jpg'/>
+                <img src='./source/renders/chest8.jpg'/>
+                <img src='./source/renders/chest9.jpg'/>
+                <img src='./source/renders/chest10.jpg'/>
+                <img src='./source/renders/chest11.jpg'/>
+              </div>
+        </div>
+
+        <div class = 'subContent' id = 'heatPaint'>
+            <div class="workImages">
+                <iframe src="https://player.vimeo.com/video/268349134" width="940" height="560" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                <img src='./source/heat_paint/IMG_5818.jpg'/>
+                <img src='./source/heat_paint/IMG_4144_small.jpg'/>
+                <img src='./source/heat_paint/IMG_4152_small.jpg'/>
+                <img src='./source/heat_paint/IMG_4150_edit.jpg'/>
+                <img src='./source/heat_paint/IMG_4149_small.jpg'/>
+                <img src='./source/heat_paint/IMG_4149_edit.jpg'/>
+              </div>
+        </div>
+
+        <div class = 'subContent' id = 'loon'>
+            <div class="workImages">
+                <br><br><br><br><br><br>
+                <iframe src="https://www.youtube.com/embed/WlQe9517CV4" frameborder="0" allowfullscreen></iframe>
+                <img src = "./source/loon/loon_type.jpg">
+            </div>
+        </div>
+
+        <div class = 'subContent' id = 'moodMap'>
+            <div class = "workImages">
+                <iframe src="https://player.vimeo.com/video/247727325" width="100%" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                <img class = "marginLeftImage" src='./source/mood_map/tweets_example.jpg'/>
+                <img class = "marginLeftImage" src='./source/mood_map/sentiment_of.jpg'/>
+                <img src='./source/mood_map/mood_map_doc1.jpg'/>
+                <img src='./source/mood_map/mood_map_doc2.jpg'/>
+              </div>
+        </div>
+
+        <div class = 'subContent' id = 'sensenet'>
+            <div class = "senseNetWorkImages">
+
+                <!--<iframe class = "marginLeftIframe" src="https://player.vimeo.com/video/353039214" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>-->
+                <iframe src="https://player.vimeo.com/video/552398854?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" title="SenseNet"></iframe>
+                <img src = "./source/sense_net/senseNetImage.png">
+        
+        
+              </div>
+        </div>
+
+        <script src="script.js"></script>
     </body>
 </html>
