@@ -1,0 +1,40 @@
+<html>
+<head>
+  <script type="text/javascript" src="script.js"></script>
+  <script type="text/javascript" src="sentimentWords.js"></script>
+  <link rel="stylesheet" href="styles.css" type="text/css" />
+  <script src="tweets/jquery-3.2.1.min.js"></script>
+
+  <!-- WaveAnimation Scripts -->
+  <script type="text/javascript" src="WaveAnimation/Wave.min.js"></script>
+  <script type="text/javascript" src="WaveAnimation/Worker.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+    <!-- shit for loading page -->
+  <div class="loadingPage" id="loadingAnimation">
+      <img src="assets/loading.gif" alt="">
+  </div>
+
+  <div class = "logo"><b><i>Montreal<br>Mood<br>Map</i></b></div>
+
+  <div class = "faces"><img src = "assets/faces.png"></img></div>
+
+  <div class = "feed" id="twitter-feed">
+    <div class = "tweetCell" id = "cell1"></div>
+  </div>
+
+  <div class = "content"><div position = "absolute" id="map"></div></div>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPrSgToLEZncalQ50cfGRmCL51wN3-7bg&libraries=visualization&callback=getTweetsAndInitMap"></script>
+
+  <!-- Canvas for Wave -->
+  <canvas id="mycanvas" width="500" height="500"></canvas>
+  <script type="text/javascript" src="Wave.min.js"></script>
+  <script type="text/javascript" src="Worker.js"></script>
+
+</body>
+</html>

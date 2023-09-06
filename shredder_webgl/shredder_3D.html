@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Shredder_3D</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+  loading
+    <script src="three.js"></script>
+    <script src="OBJLoader.js"></script>
+    loading
+    <script>
+        var radius1 = 4;
+
+        var man_rotation = Math.floor(Math.random() * (30 - 1 + 1)) + 1;
+
+        var man_position = Math.floor(Math.random() * (40 - (-40) + 1)) + -40;
+
+        var camera, scene, renderer;
+        var cube1, cube2, cube3, cube4, sphere, torus, chromeMaterial;
+        var torusGeometry = new THREE.TorusBufferGeometry(5, 2, 8, 10);
+        var cubeGeometry = new THREE.CubeGeometry(5, 5, 5);
+        var hand1;
+        var material1 = new THREE.MeshLambertMaterial({
+            color: 0x00ff00
+        });
+        var standardMaterial = new THREE.MeshStandardMaterial({
+            //diffuse: 0,
+            //color: 0x000000,
+            //emissive: 0x000000,
+            //matalness: 1,
+            //roughness: 0,
+            shading: THREE.FlatShading,
+            color: 0x00ff00
+        })
+
+        var count = 0,
+            cubeCamera1, cubeCamera2;
+
+        var fov = 60,
+            isUserInteracting = false,
+            onMouseDownMouseX = 0,
+            onMouseDownMouseY = 0,
+            onMouseDownLon = 0,
+            onMouseDownLat = 0,
+            lon = 0,
+            lat = 0;
+
+        var textureLoader = new THREE.TextureLoader();
+
+        if((Math.floor(Math.random() * (3 - 0 + 1)) + 0) == 0){
+          textureLoader.load('shredder_screenshot.png', function(texture) {
+              texture.mapping = THREE.UVMapping;
+
+              init(texture);
+              animate();
+          });
+        }
+        else if((Math.floor(Math.random() * (3 - 0 + 1)) + 0) == 1){
+          textureLoader.load('shredder_2_screenshot.png', function(texture) {
+              texture.mapping = THREE.UVMapping;
+
+              init(texture);
+              animate();
+          });
+        }
+        else if((Math.floor(Math.random() * (3 - 0 + 1)) + 0) == 2){
+          textureLoader.load('jodi_screenshot.png', function(texture) {
+              texture.mapping = THREE.UVMapping;
+
+              init(texture);
+              animate();
+          });
+        }
+        else if((Math.floor(Math.random() * (3 - 0 + 1)) + 0) == 3){
+          textureLoader.load('shredder_2_screenshot.png', function(texture) {
+              texture.mapping = THREE.UVMapping;
+
+              init(texture);
+              animate();
+          });
+        }else{
+          textureLoader.load('shredder_screenshot.png', function(texture) {
+              texture.mapping = THREE.UVMapping;
+
+              init(texture);
+              animate();
+          });
+        }
+        function init(texture) {
+            camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 1, 1000);
+            scene = new THREE.Scene();
+
+            cubeCamera1 = new THREE.CubeCamera(5, 1000, 256);
+            cubeCamera1.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
+            scene.add(cubeCamera1);
+
+            cubeCamera2 = new THREE.CubeCamera(5, 1000, 256);
+            cubeCamera2.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
+            scene.add(cubeCamera2);
+
+            chromeMaterial = new THREE.MeshBasicMaterial({
+                shading: THREE.SmoothShading,
+                envMap: cubeCamera2.renderTarget.texture
+            });
+
+            var ambient = new THREE.AmbientLight(0xffffff);
+            var directionalLight = new THREE.DirectionalLight(0xffffff);
+            directionalLight.position.set(0, 0, 1);
+            //scene.add(ambient);
+            scene.add(directionalLight);
+
+            var mesh = new THREE.Mesh(new THREE.SphereGeometry(500, 32, 16), new THREE.MeshBasicMaterial({
+                map: texture
+            }));
+            mesh.scale.x = -1;
+            scene.add(mesh);
+
+            torus = new THREE.Mesh(torusGeometry, standardMaterial);
+            cube1 = new THREE.Mesh(cubeGeometry, material1)
+            cube2 = new THREE.Mesh(cubeGeometry, material1)
+            cube3 = new THREE.Mesh(cubeGeometry, material1)
+            cube4 = new THREE.Mesh(cubeGeometry, material1)
+
+            torus.position.set(0, man_position/2, 0);
+            cube1.position.set(14, 14, man_position/2);
+            cube2.position.set(-14, man_position/2, 14);
+            cube3.position.set(14, -14, man_position/2);
+            cube4.position.set(man_position/2, -14, 0);
+
+            scene.add(cube1, cube2, cube3, cube4, torus);
+
+
+
+            hand = new THREE.Mesh();
+            var loader = new THREE.OBJLoader();
+            loader.load('sources/hi_poly_man.obj', function(object) {
+                object.traverse(function(child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.material = chromeMaterial;
+                        child.material.shading = THREE.SmoothShading;
+                    }
+                });
+                hand1 = object;
+
+                hand1.position.set(man_position, 0, man_position);
+                hand1.rotation.set(0.5, -0.4, -0.6);
+                hand1.scale.set(3, 3, 3);
+                scene.add(hand1);
+            });
+            hand.traverse(function(node) {
+                if (node instanceof THREE.Mesh) {
+                    node.geometry.computeVertexNormals();
+                }
+            });
+
+            renderer = new THREE.WebGLRenderer({
+                antialias: true
+            });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            document.body.appendChild(renderer.domElement);
+
+            sphere = new THREE.Mesh(new THREE.IcosahedronGeometry(8, 3), chromeMaterial);
+            sphere.position.set(0, 0, 0);
+            scene.add(sphere);
+
+            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            document.addEventListener('wheel', onDocumentMouseWheel, false);
+
+            window.addEventListener('resize', onWindowResized, false);
+
+            onWindowResized(null);
+        }
+
+        function onWindowResized(event) {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.projectionMatrix.makePerspective(fov, window.innerWidth / window.innerHeight, 1, 1100);
+        }
+
+        function onDocumentMouseDown(event) {
+
+            event.preventDefault();
+
+            onPointerDownPointerX = event.clientX;
+            onPointerDownPointerY = event.clientY;
+
+            onPointerDownLon = lon;
+            onPointerDownLat = lat;
+
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            document.addEventListener('mouseup', onDocumentMouseUp, false);
+
+        }
+
+        function onDocumentMouseMove(event) {
+
+            lon = (event.clientX - onPointerDownPointerX) * 0.1 + onPointerDownLon;
+            lat = (event.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
+
+        }
+
+        function onDocumentMouseUp(event) {
+
+            document.removeEventListener('mousemove', onDocumentMouseMove, false);
+            document.removeEventListener('mouseup', onDocumentMouseUp, false);
+
+        }
+
+        function onDocumentMouseWheel(event) {
+
+            fov += event.deltaY * 0.05;
+
+            camera.projectionMatrix.makePerspective(fov, window.innerWidth / window.innerHeight, 1, 1100);
+
+        }
+
+        function animate() {
+
+            requestAnimationFrame(animate);
+            render();
+
+        }
+
+        function render() {
+
+            //lon += .15;
+
+            lat = Math.max(-85, Math.min(85, lat));
+            phi = THREE.Math.degToRad(90 - lat);
+            theta = THREE.Math.degToRad(lon);
+
+            //cubeCamera1.rotation.x += 0.01;
+            //cubeCamera2.rotation.x += 0.01;
+
+            hand1.rotation.x += man_rotation * 0.01;
+            hand1.rotation.y += man_rotation * 0.01;
+
+            cube1.rotation.x += 0.01;
+            cube1.rotation.y += 0.02;
+
+            cube2.rotation.x += 0.01;
+            cube2.rotation.z += 0.02;
+
+            cube3.rotation.z += 0.01;
+            cube3.rotation.y += 0.02;
+
+            cube4.rotation.x += 0.02;
+            cube4.rotation.y += 0.01;
+
+            //camera.position.z = 25;
+
+            camera.position.x = 40 * Math.sin(phi) * Math.cos(theta);
+            camera.position.y = 40 * Math.cos(phi);
+            camera.position.z = 40 * Math.sin(phi) * Math.sin(theta);
+
+            camera.lookAt(scene.position);
+
+            sphere.visible = false; // *cough*
+
+            // pingpong
+
+            if (count % 2 === 0) {
+
+                chromeMaterial.envMap = cubeCamera1.renderTarget.texture;
+                cubeCamera2.updateCubeMap(renderer, scene);
+
+            } else {
+
+                chromeMaterial.envMap = cubeCamera2.renderTarget.texture;
+                cubeCamera1.updateCubeMap(renderer, scene);
+
+            }
+
+            count++;
+
+            sphere.visible = true; // *cough*
+
+            renderer.render(scene, camera);
+
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1348.17">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">#include &lt;MozziGuts.h&gt;</p>
+<p class="p1">#include &lt;Oscil.h&gt;</p>
+<p class="p1">#include &lt;AutoMap.h&gt;</p>
+<p class="p1">#include &lt;Smooth.h&gt;</p>
+<p class="p1">#include &lt;LowPassFilter.h&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">#include &lt;tables/sin2048_int8.h&gt;</p>
+<p class="p1">#include &lt;tables/saw2048_int8.h&gt;</p>
+<p class="p1">#include &lt;tables/triangle2048_int8.h&gt;</p>
+<p class="p1">#include &lt;tables/square_analogue512_int8.h&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">#include &lt;tables/sin512_int8.h&gt; #include &lt;tables/sin256_int8.h&gt;</p>
+<p class="p1">#include &lt;tables/saw512_int8.h&gt; #include &lt;tables/saw256_int8.h&gt;</p>
+<p class="p1">#include &lt;tables/triangle512_int8.h&gt;<span class="Apple-converted-space">  </span>#include &lt;tables/triangle_analogue512_int8.h&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">Oscil &lt;2048, AUDIO_RATE&gt; aOscil;<span class="Apple-converted-space">    </span>//oscillators</p>
+<p class="p1">Oscil &lt;2048, AUDIO_RATE&gt; bOscil;</p>
+<p class="p1">Oscil &lt;2048, AUDIO_RATE&gt; cOscil;</p>
+<p class="p2"><br></p>
+<p class="p1">Oscil &lt;512, AUDIO_RATE&gt; aLFO;<span class="Apple-converted-space">    </span>//LFOs</p>
+<p class="p1">Oscil &lt;512, AUDIO_RATE&gt; bLFO;</p>
+<p class="p1">Oscil &lt;512, AUDIO_RATE&gt; cLFO;</p>
+<p class="p2"><br></p>
+<p class="p1">Oscil &lt;SIN512_NUM_CELLS, AUDIO_RATE&gt; sinLFO(SIN512_DATA); <span class="Apple-converted-space">  </span>//LFOS</p>
+<p class="p1">Oscil &lt;SAW512_NUM_CELLS, AUDIO_RATE&gt; sawLFO(SAW512_DATA);</p>
+<p class="p1">Oscil &lt;TRIANGLE512_NUM_CELLS, AUDIO_RATE&gt; triangleLFO(SAW512_DATA);</p>
+<p class="p1">Oscil &lt;SQUARE_ANALOGUE512_NUM_CELLS, AUDIO_RATE&gt; squareLFO(SQUARE_ANALOGUE512_DATA);</p>
+<p class="p2"><br></p>
+<p class="p1">LowPassFilter lpf;</p>
+<p class="p2"><br></p>
+<p class="p1">#define CONTROL_RATE 256</p>
+<p class="p2"><br></p>
+<p class="p1">long out;</p>
+<p class="p2"><br></p>
+<p class="p1">int aOscilPitchPin = 1; int bOscilPitchPin = 4; int cOscilPitchPin = 7; <span class="Apple-converted-space">              </span>//oscilPitch pins</p>
+<p class="p1">int aOscilAmplitudePin = 0; int bOscilAmplitudePin = 3; int cOscilAmplitudePin = 6; <span class="Apple-converted-space">  </span>//oscilAmp pins</p>
+<p class="p1">int aOscilLFOPin = 2; int bOscilLFOPin = 5; int cOscilLFOPin = 8; <span class="Apple-converted-space">                    </span>//LFO pins</p>
+<p class="p1">int masterAmplitudePin = 9; <span class="Apple-converted-space">                                                          </span>//Master volume pin</p>
+<p class="p2"><br></p>
+<p class="p1">unsigned char aOscilAmplitudeValue = 0;</p>
+<p class="p1">int aOscilPitchValue = 0;</p>
+<p class="p2"><br></p>
+<p class="p1">unsigned char bOscilAmplitudeValue = 0;</p>
+<p class="p1">int bOscilPitchValue = 0;</p>
+<p class="p2"><br></p>
+<p class="p1">unsigned char cOscilAmplitudeValue = 0;</p>
+<p class="p1">int cOscilPitchValue = 0;</p>
+<p class="p2"><br></p>
+<p class="p1">unsigned char masterAmplitude = 0;</p>
+<p class="p2"><br></p>
+<p class="p1">int aLFOFreq;</p>
+<p class="p1">int bLFOFreq;</p>
+<p class="p1">int cLFOFreq;</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1">void setup(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.begin(115200);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>startMozzi(CONTROL_RATE);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">void updateControl(){</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>pinMode(22, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(24, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(26, INPUT_PULLUP);<span class="Apple-converted-space">      </span>pinMode(28, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(30, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(32, INPUT_PULLUP);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>pinMode(34, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(36, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(38, INPUT_PULLUP);<span class="Apple-converted-space">      </span>pinMode(40, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(42, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(44, INPUT_PULLUP);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>pinMode(46, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(48, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(50, INPUT_PULLUP);<span class="Apple-converted-space">      </span>pinMode(52, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(31, INPUT_PULLUP);<span class="Apple-converted-space">  </span>pinMode(33, INPUT_PULLUP);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>int A0Value = mozziAnalogRead(aOscilAmplitudePin);<span class="Apple-converted-space">  </span>int A2Value = mozziAnalogRead(aOscilLFOPin);<span class="Apple-converted-space">  </span>int A6Value = mozziAnalogRead(cOscilAmplitudePin);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>int A1Value = mozziAnalogRead(aOscilPitchPin);<span class="Apple-converted-space">  </span>int A3Value = mozziAnalogRead(bOscilAmplitudePin);<span class="Apple-converted-space">  </span>int A7Value = mozziAnalogRead(bOscilLFOPin);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>int A4Value = mozziAnalogRead(bOscilPitchPin);<span class="Apple-converted-space">  </span>int A5Value = mozziAnalogRead(cOscilPitchPin);<span class="Apple-converted-space">  </span>int A8Value = mozziAnalogRead(cOscilLFOPin);</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>int A9Value = mozziAnalogRead(masterAmplitudePin);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>aOscil.setFreq(0);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>bOscil.setFreq(0);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>cOscil.setFreq(0);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>aOscilPitchValue = map(A1Value, 0,1023,0,2046); <span class="Apple-converted-space">    </span>bOscilPitchValue = map(A4Value, 0,1023,0,2046); <span class="Apple-converted-space">            </span>cOscilPitchValue = map(A5Value, 0,1023,0,2046);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>aOscilAmplitudeValue = map(A0Value, 0,1023,0,127);<span class="Apple-converted-space">  </span>bOscilAmplitudeValue = map(A3Value, 0,1023,0,127);<span class="Apple-converted-space">          </span>cOscilAmplitudeValue = map(A6Value, 0,1023,-127<span class="Apple-converted-space">    </span>,127);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>aLFOFreq = map(A2Value, 0, 1023, 0, 1500);<span class="Apple-converted-space">          </span>bLFOFreq = map(A7Value, 0, 1023, 0, 1500);<span class="Apple-converted-space">                  </span>cLFOFreq = map(A8Value, 0, 1023, 0, 1500);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>masterAmplitude = map(A9Value, 0,1023,0,255);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>oscilWaveSelect();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>aLFO.setFreq(abs(aLFOFreq));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>bLFO.setFreq(abs(bLFOFreq));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>cLFO.setFreq(abs(cLFOFreq));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>LFOWaveSelect();</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>aOscilPitchValue = aOscilPitchValue + ((int)aLFO.next());</p>
+<p class="p1"><span class="Apple-converted-space">  </span>bOscilPitchValue = bOscilPitchValue + ((int)bLFO.next());</p>
+<p class="p1"><span class="Apple-converted-space">  </span>cOscilPitchValue = cOscilPitchValue + ((int)cLFO.next());</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>aOscil.setFreq(aOscilPitchValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>bOscil.setFreq(bOscilPitchValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>cOscil.setFreq(cOscilPitchValue);</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//serialPrintDigital();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>//serialPrintPots();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("cAmp = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(cOscilAmplitudeValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("<span class="Apple-converted-space">  </span>cPitch = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(cOscilPitchValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("clfo = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print((int)cLFO.next());</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.println("\t");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>//serialPrint();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">int updateAudio(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>out = <span class="Apple-converted-space">    </span>(</p>
+<p class="p1"><span class="Apple-converted-space">             </span>((int)aOscil.next()*aOscilAmplitudeValue) +<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">             </span>((int)bOscil.next()*bOscilAmplitudeValue) +<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">             </span>((int)cOscil.next()*cOscilAmplitudeValue)</p>
+<p class="p1"><span class="Apple-converted-space">             </span>)&gt;&gt;8;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>//out = out * masterAmplitude&gt;&gt;8;</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>return out; <span class="Apple-converted-space"> </span></p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">void loop(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>audioHook();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">void oscilWaveSelect(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(digitalRead(46) == HIGH &amp;&amp; digitalRead(48) == HIGH &amp;&amp; digitalRead(50) == HIGH){<span class="Apple-converted-space">                </span>//aOscil wave select digital pin 46 48 50</p>
+<p class="p1"><span class="Apple-converted-space">    </span>aOscil.setTable(SIN2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(46) == LOW &amp;&amp; digitalRead(48) == HIGH &amp;&amp; digitalRead(50) == HIGH){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>aOscil.setTable(SAW2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(46) == HIGH &amp;&amp; digitalRead(48) == LOW &amp;&amp; digitalRead(50) == HIGH){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>aOscil.setTable(TRIANGLE2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(46) == HIGH &amp;&amp; digitalRead(48) == HIGH &amp;&amp; digitalRead(50) == LOW){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>aOscil.setTable(SQUARE_ANALOGUE512_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(digitalRead(34) == HIGH &amp;&amp; digitalRead(36) == HIGH &amp;&amp; digitalRead(38) == HIGH){<span class="Apple-converted-space">                </span>//bOscil wave select digital pin 34 36 38</p>
+<p class="p1"><span class="Apple-converted-space">    </span>bOscil.setTable(SIN2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(34) == LOW &amp;&amp; digitalRead(36) == HIGH &amp;&amp; digitalRead(38) == HIGH){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>bOscil.setTable(SAW2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(34) == HIGH &amp;&amp; digitalRead(36) == LOW &amp;&amp; digitalRead(38) == HIGH){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>bOscil.setTable(TRIANGLE2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(34) == HIGH &amp;&amp; digitalRead(36) == HIGH &amp;&amp; digitalRead(38) == LOW){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>bOscil.setTable(SQUARE_ANALOGUE512_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(digitalRead(22) == HIGH &amp;&amp; digitalRead(24) == HIGH &amp;&amp; digitalRead(26) == HIGH){<span class="Apple-converted-space">                </span>//cOscil wave select digital pin 22 24 26</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cOscil.setTable(SIN2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(22) == LOW &amp;&amp; digitalRead(24) == HIGH &amp;&amp; digitalRead(26) == HIGH){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cOscil.setTable(SAW2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(22) == HIGH &amp;&amp; digitalRead(24) == LOW &amp;&amp; digitalRead(26) == HIGH){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cOscil.setTable(TRIANGLE2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(22) == HIGH &amp;&amp; digitalRead(24) == HIGH &amp;&amp; digitalRead(26) == LOW){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cOscil.setTable(SQUARE_ANALOGUE512_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">void LFOWaveSelect(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(digitalRead(52) == HIGH &amp;&amp; digitalRead(31) == HIGH &amp;&amp; digitalRead(33) == HIGH){<span class="Apple-converted-space">                </span>//aLFO wave selector digital pin 52 31 33</p>
+<p class="p1"><span class="Apple-converted-space">    </span>aLFO.setTable(SIN2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(52) == LOW &amp;&amp; digitalRead(31) == HIGH &amp;&amp; digitalRead(33) == HIGH){<span class="Apple-converted-space">                                 </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>aLFO.setTable(SAW2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(52) == HIGH &amp;&amp; digitalRead(31) == LOW &amp;&amp; digitalRead(33) == HIGH){ <span class="Apple-converted-space">                               </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>aLFO.setTable(TRIANGLE512_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(52) == HIGH &amp;&amp; digitalRead(31) == HIGH &amp;&amp; digitalRead(33) == LOW){<span class="Apple-converted-space">                                 </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>aLFO.setTable(SQUARE_ANALOGUE512_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(digitalRead(40) == HIGH &amp;&amp; digitalRead(42) == HIGH &amp;&amp; digitalRead(44) == HIGH){<span class="Apple-converted-space">                </span>//bLFO wave selector digital pin 40 42 44</p>
+<p class="p1"><span class="Apple-converted-space">    </span>bLFO.setTable(SIN2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(40) == LOW &amp;&amp; digitalRead(42) == HIGH &amp;&amp; digitalRead(44) == HIGH){<span class="Apple-converted-space">                                 </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>bLFO.setTable(SAW2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(40) == HIGH &amp;&amp; digitalRead(42) == LOW &amp;&amp; digitalRead(44) == HIGH){ <span class="Apple-converted-space">                               </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>bLFO.setTable(TRIANGLE512_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(40) == HIGH &amp;&amp; digitalRead(42) == HIGH &amp;&amp; digitalRead(44) == LOW){<span class="Apple-converted-space">                                 </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>bLFO.setTable(SQUARE_ANALOGUE512_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(digitalRead(28) == HIGH &amp;&amp; digitalRead(30) == HIGH &amp;&amp; digitalRead(32) == HIGH){<span class="Apple-converted-space">                </span>//cLFO wave selector digital pin 28 30 32</p>
+<p class="p1"><span class="Apple-converted-space">    </span>cLFO.setTable(SIN2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(28) == LOW &amp;&amp; digitalRead(30) == HIGH &amp;&amp; digitalRead(32) == HIGH){<span class="Apple-converted-space">                                 </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>cLFO.setTable(SAW2048_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(28) == HIGH &amp;&amp; digitalRead(30) == LOW &amp;&amp; digitalRead(32) == HIGH){ <span class="Apple-converted-space">                               </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>cLFO.setTable(TRIANGLE512_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}if(digitalRead(28) == HIGH &amp;&amp; digitalRead(30) == HIGH &amp;&amp; digitalRead(32) == LOW){<span class="Apple-converted-space">                                 </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>cLFO.setTable(SQUARE_ANALOGUE512_DATA);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">}</p>
+<p class="p1">void serialPrint(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("aLFO");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(aLFO.next());</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.println(" ");</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">void serialPrintDigital(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("22 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(22));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("24 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(24));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("26 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(26));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("28 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(28));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("30 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(30));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("32 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(32));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("34 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(34));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("36 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(36));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("38 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(38));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("40 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(40));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("42 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(42));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("44 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(44));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("46 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(46));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("48 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(48));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("50 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(50));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("52 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(52));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("31 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(31));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(" ");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("33 = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(digitalRead(33));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><br></p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.println();</p>
+<p class="p1">}</p>
+<p class="p1">void serialPrintPots(){</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print(out);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("masterAmp = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print(masterAmplitude);</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("aAmp = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(aOscilAmplitudeValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("<span class="Apple-converted-space">  </span>aPitch = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(aOscilPitchValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("bAmp = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print(bOscilAmplitudeValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("<span class="Apple-converted-space">  </span>bPitch = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print(bOscilPitchValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("cAmp = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print(cOscilAmplitudeValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("<span class="Apple-converted-space">  </span>cPitch = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print(cOscilPitchValue);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("aLFO = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print(aLFOFreq);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("bLFO = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print(bLFOFreq);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("cLFO = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print(cLFOFreq);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("alfo = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print((int)aLFO.next());</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("blfo = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print((int)bLFO.next());</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("clfo = ");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>//Serial.print((int)cLFO.next());</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.print("\t");</p>
+<p class="p2"><span class="Apple-converted-space">  </span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Serial.println();</p>
+<p class="p1">}</p>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <title>Owen Coolidge - WebGl Experiments</title>
+    <link rel="stylesheet" href="styles.css" type="text/css" />
+    <script type="text/javascript" src="script.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div class="menuColumn">
+        <a href="/"><h1>Owen&nbspCoolidge</h1></a>
+
+          <div class = "description">
+            <p><b><i>WebGL Experiments</i></b></p>
+            <p>These 3D scenes are generated from a program written in javascript using the WebGL API.
+              Each scene has somewhere between 100 - 300 lines of code from which a virtual 3D space
+              complete with lights, shadows, physics, reflections, and refractions is constructed.
+              Depending on the power your computer has at its disposal, these simulaitons may be more or less
+              smooth.  <br><br>
+              Click and drag to rotate.  Scroll to zoom.
+                <!--Something about
+              real world physics and stuff applied to "badly" or unconvincingly modeled models.  Or
+              real world physics applied in too correct of a way, or in a way that doesn't take into account the nuances
+              that exist in the real world.  The ease with which a computer can interpret a plaintext document and change 
+              it into a life like simulation is fascinating.--></p>
+          </div>
+          <br>
+        <a><b><p class = "selected" id = "sketch1Button">Physics</p></b></a>
+        <a><b><p id = "sketch2Button">Physics II</p></b></a>
+        <a><b><p id = "sketch3Button">Cubes with Shadows</p></b></a>
+        <a><b><p id = "sketch4Button">Reflective Cubes</p></b></a>
+        <a><b><p id = "sketch5Button">Shadow Torus</p></b></a>
+        <a><b><p id = "sketch6Button">Reflective Object</p></b></a>
+    </div>
+    <div class="webglContent">
+      <iframe class = "webglIframe" id = "webglIframe" width = "100%" src="../../source/webgl/sketches/physijs_1.html"></iframe>
+    </div>
+</body>
+
+</html>
