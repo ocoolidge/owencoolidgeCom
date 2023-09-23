@@ -49,9 +49,12 @@ body{
     line-height: 16px;
 }
 
-.content img{
+.content{
     width: 84%;
-    margin-left: 8%;
+    margin-left: 16%;
+}
+
+.content img{
     margin-top: 15vh;
     margin-bottom: 15vh;
     cursor: pointer;
@@ -113,4 +116,9 @@ body{
 }.hoverForText{
     color:white;
     background-color: black;
+}
+
+#rendersI{
+    width: 45%;
+    float: right;
 }
