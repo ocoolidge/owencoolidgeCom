@@ -1,4 +1,4 @@
-let allContent = ['stonks', 'bike', 'mosh', 'photography', 'renders', 'heatPaint', 'loon', 'moodMap', 'sensenet', 'mycocene', 'multiplexer']
+let allContent = ['large', 'stonks', 'bike', 'mosh', 'photography', 'renders', 'heatPaint', 'loon', 'moodMap', 'sensenet', 'mycocene', 'multiplexer']
 let allDescriptions = []
 
 for(let content of allContent){
